@@ -15,7 +15,7 @@ const doesFileAreadyExist = (file, callback) => {
         output: process.stdout
       });
   
-      rl.question(`${file} already exists. Press 'Y' or 'y' overwrite, or any other key to quit.`, response => {
+      rl.question(`${file} already exists. Press 'Y' or 'y' overwrite, or any other key to quit.\n> `, response => {
         if (response === 'Y' || response === 'y') {
           callback();
         }
@@ -29,6 +29,10 @@ const makeRequest = (url, fileName) => {
   request(url, (error, response, body) => {
     if (error) {
       console.log('error:', error);
+      return;
+    }
+    if (response && (response.statusCode < 200 || response.statusCode > 299)) {
+      console.log(`${response.statusCode} - ${response.statusMessage}`);
       return;
     }
     console.log('statusCode', response && response.statusCode);
